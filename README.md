@@ -1,5 +1,7 @@
-# sssood.github.io
-CISC 480 Portfolio
+# Learn More About Me!
 
-https://3luko.github.io/Cisc480Fall2025/
+This portfolio was created as a part of my University of St. Thomas Senior Capstone class.
+
+websiteurl.url
+
 
