@@ -26,167 +26,79 @@
     <main class="container">
         <h1></h1>        
         <div class="project-detail-container">
-            <h2>Amazon Purchases</h2>
+            <h2>Creative Coding - Perlin</h2>
             <p style="color: var(--text-gray);">
-                A detailed description of the project, including its purpose, the problem it solves, technologies used, and your specific role or contributions. Explain the key features and the outcome of the project.
+                This project uses Perlin noise in p5.js to generate smooth, organic patterns that evolve as the frame is created, creating a dynamic and natural-looking visual composition. It explores the intersection of randomness and control, transforming algorithmic noise into an expressive form of digital art.
             </p>
 
             <h2>Example Execution</h2>
-            <img src="media\amazonPurchases.png" alt="Screenshot of Project 2 Execution">
+            <img src="media\project2.png" alt="Screenshot of Project 2 Execution">
 
             <h2>Project Code</h2>
             <pre><code>
-import { List } from "@mui/material";
-import * as React from "react";
-import AddSet from "./AddSet";
-import SetDropdown from "./SetDropdown";
+let numLines = 8;  // how many terrain lines
+let numStars = 5; // how many stars
+let offsets = [];  // independent noise offsets for each line
 
-function ValuesSetTab () {
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  background(0);
+  noFill();
 
-    const [openSection, setOpenSection] = React.useState(null);
+  // assign each line a unique noise offset
+  for (let i = 0; i < numLines; i++) {
+    offsets.push(random(1000));
+  }
+}
 
-    const sins = [
-    {
-      name: "Pride",
-      description:
-        "Excessive belief in one's own abilities, interfering with recognition of the grace of God. Known as Vanity and called the sin from which all others arise.",
-    },
-    {
-      name: "Greed / Avarice",
-      description:
-        "The desire for material wealth or gain while ignoring the spiritual. Also called Avarice or Covetousness.",
-    },
-    {
-      name: "Envy",
-      description:
-        "The desire for others' traits, status, abilities, or situation.",
-    },
-    {
-      name: "Wrath / Anger",
-      description:
-        "Manifested in the individual who spurns love and opts instead for fury.",
-    },
-    {
-      name: "Lust",
-      description:
-        "An inordinate craving for the pleasures of the body.",
-    },
-    {
-      name: "Gluttony",
-      description:
-        "An inordinate desire to consume more than what one requires.",
-    },
-    {
-      name: "Sloth / Acedia",
-      description: "The avoidance of physical or spiritual work.",
-    },
-    ];
+function draw() {
+  let noiseLevel = height / 3;
+  let noiseScale = 0.01;
+  let x = frameCount;
 
-    const love = [
-        {
-            name: "Words of Affirmation",
-            description: "Sharing encouraging messages, providing meaningful praise."
-        },
-        {
-            name: "Quality Time",
-            description: "Time spent engaging in shared activities, with undivided attention.",
+  if (x > width) noLoop(); // stop when reaching the right edge
 
-        },
-        {
-            name: "Receiving Gifts",
-            description: "Giving and receiving tokens of affection."
-        },
-        {
-            name: "Acts of Service",
-            description: "Doing helpful things for another, providing service."
-        },
-        {
-            name: "Physical Touch",
-            description: "Being physically engaged in close proximity"
-        }
-    ]
+  // draw terrain lines
+  for (let i = 0; i < numLines; i++) {
+    let nx = noiseScale * x + offsets[i];
+    let y = height / 2 + i * 30 + noiseLevel * (noise(nx) - 0.5);
 
-    const heaven = [
-        {
-            name: "Prudence",
-            description: "Disposes the practical reason to discern, in every circumstance, our true good and to choose the right means for achieving it."
-        },
-        {
-            name: "Justice",
-            description: "The firm and constant will to give God and neighbor their due."
-        },
-        {
-            name: "Fortitude",
-            description: "Firmness in difficulties and constancy in the pursuit of the good."
-        },
-        {
-            name: "Temperance",
-            description: "Moderates the attraction of the pleasures of the senses and provides balance in the use of created goods."
-        },
-        {
-            name: "Faith",
-            description: "Belief in God and all that he has revealed to us and that Holy Church proposes for our belief."
-        },
-        {
-            name: "Hope",
-            description: "Desiring, and with steadfast hope awaiting from God, eternal life and graces to merit it."
-        },
-        {
-            name: "Charity",
-            description: "Loving God above all things and our neighbor as ourselves for love of God."
-        }
-    ]
+    let r = 150 + 105 * noise(nx + 10);
+    let g = 150 + 105 * noise(nx + 20);
+    let b = 150 + 105 * noise(nx + 30);
 
-    const capital = [
-        {
-            name: "Humility",
-            description: "Being inclined to the lowest place."
-        },
-        {
-            name: "Charity",
-            description: "Loving God above all things and our neighbor as ourselves for love of God."
-        },
-        {
-            name: "Kindness/Mercy",
-            description: "Being bountiful to others, supplying for the defect in one's neighbor."
-        },
-        {
-            name: "Patience",
-            description: "Enduring difficult circumstances"
-        },
-        {
-            name: "Chastity",
-            description: "The successful integration of sexuality within the person and thus the inner unity of man in his bodily and spiritual being."
-        },
-        {
-            name: "Temperance",
-            description: "Moderating the attraction of the pleasures of the senses and providing balance in the use of created goods."
-        },
-        {
-            name: "Diligence",
-            description: "Carefulness and persistent effort or work."
-        }
-    ]
-    
-    const [capitalItems, setCapitalItems] = React.useState(capital);
-    const [sinItems, setSinItems] = React.useState(sins);
-    const [heavenItems, setHeavenItems] = React.useState(heaven);
-    const [loveItems, setLoveItems] = React.useState(love);
+    stroke(r, g, b);
+    line(x, height, x, y);
+  }
 
-    const [activeLove, setActiveLoveButton] = React.useState(false)
-    const [activeSins, setActiveSinsButton] = React.useState(false)
-    const [activeHeaven, setActiveHeavenButton] = React.useState(false)
-    const [activeCapital, setActiveCapitalButton] = React.useState(false)
-
-    return (
-            //React Code
-    )
-   
+  // draw stars only if above terrain
+  for (let i = 0; i < numStars; i++) {
+    let starX = random(width);
+    let starY = random(height);
+    let terrainY = getTerrainTopAt(starX, noiseLevel, noiseScale); // find top terrain height here
+    if (starY + 10 < terrainY) {
+      let starSize = 1 + 2 * noise(0.1 * starX, 0.1 * starY, frameCount * 0.01);
+      fill(255);
+      noStroke();
+      ellipse(starX, starY, starSize);
+    }
+  }
 }
 
 
 
-export default ValuesSetTab;
+// helper: iterate through lines to find the top terrain height at x
+function getTerrainTopAt(x, noiseLevel, noiseScale) {
+  let minY = height;
+  for (let i = 0; i < numLines; i++) {
+    let nx = noiseScale * x + offsets[i];
+    let y = height/2 + i * 30 + noiseLevel * (noise(nx) - 0.5);
+    if (y < minY) {
+      minY = y;
+    }
+  }
+  return minY;
+}
             </code></pre>
         </div>
     </main>
